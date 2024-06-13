@@ -34,20 +34,19 @@ public class ProductServiceImpl implements ProductService {
 //       to dto for the client
         Product product = modelMapper.map(productDto, Product.class);
         Product savedProduct = productRepository.save(product);
-        return ProductMapper.mapToProductDto(savedProduct);
+        return modelMapper.map(savedProduct, ProductDto.class);
     }
 
     @Override
     public ProductDto getProductById(Long prodId) {
-        Product product = productRepository.findById(prodId)
-                .orElseThrow(() -> new ResourceNotFoundException("Product does not exist with given ID : " + prodId));
-        return ProductMapper.mapToProductDto(product);
+        Product product = findById(prodId);
+        return modelMapper.map(product, ProductDto.class);
     }
 
     @Override
     public List<ProductDto> getAllProduct() {
         List<Product> allProducts = productRepository.findAll();
-        return allProducts.stream().map(product -> ProductMapper.mapToProductDto(product))
+        return allProducts.stream().map(product -> modelMapper.map(product, ProductDto.class))
                 .collect(Collectors.toList());
     }
 
@@ -64,7 +63,7 @@ public class ProductServiceImpl implements ProductService {
 
         Product updatedProductObject = productRepository.save(product);
 
-        return ProductMapper.mapToProductDto(updatedProductObject);
+        return modelMapper.map(updatedProductObject, ProductDto.class);
     }
 
     @Override
